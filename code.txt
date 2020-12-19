@@ -1,0 +1,135 @@
+**
+ * Mimics functional lists.
+ * @author Moskalenko Vyacheslav
+ * @since JDK1.4
+ */
+ 
+public abstract class FunList {
+ 
+    /**
+     * @return the first int in the list object
+     */
+    public abstract int car();
+    /**
+     * @return the tail (all but the first element) of the list object
+     */
+    public abstract FunList cdr();
+    /**
+     * NOTE: toString () method is NOT abstract. It calls, toStringHelp() , an abstract method.
+     * It represents what we call an "invariant" behavior for <code>FunList</code>.
+     * It is an example of the "Template Method Pattern". A "template method" is a method that
+     * makes calls to at least one abstract method in its own class.
+     */
+    public String toString(){
+        return "(" + toStringHelp() + " ) ";
+    }
+    /**
+     * @return a String description of the list object
+     */
+    abstract String toStringHelp();
+ 
+    public  abstract FunList append(FunList other);
+}
+ 
+/**
+ * Mimics fundamental function cons for constructs
+ * memory objects which hold two values or pointers to values
+ * @author Vyacheslav Moskalenko
+ * @since JDK1.4
+ */
+public class Cons extends FunList {
+    private int _dat;
+    private FunList _cdr;
+ 
+    public Cons(int carDat, FunList cdr){
+        _dat = carDat;
+        _cdr = cdr;
+    }
+    /**
+     * @param i a left side (head) of the list.
+     */
+    public Cons(int i){
+        _dat = i;
+        _cdr = Empty.uniqueInstance();
+    }
+    /**
+     * @return the first int in the list object
+     */
+    public int car(){
+        return _dat;
+    }
+    /**
+     * @return the tail (all but the first element) of the list object
+     */
+    public FunList cdr(){
+        return _cdr;
+    }
+    /**
+     * @return a String description of the list object
+     */
+    String toStringHelp(){
+        return " " + _dat + _cdr.toStringHelp();
+    }
+ 
+    @Override
+    public FunList append(FunList other) {
+        return this.cdr();
+    }
+ 
+}
+ 
+/**
+ * Mimics functional empty list.
+ * @author Vyacheslav Moskalenko
+ * @since JDK1.4
+ */
+public class Empty extends FunList {
+    static Empty instance;
+    private Empty(){}
+ 
+    public static Empty uniqueInstance() {
+        if (instance == null) {
+            instance = new Empty();
+        }
+        return instance;
+    }
+ 
+    public int car(){
+        throw new java.util.NoSuchElementException("car requires a non Empty Funlist");
+    }
+ 
+    public FunList cdr(){
+        throw new java.util.NoSuchElementException("cdr requires a non Empty Funlist");
+    }
+ 
+    String toStringHelp(){
+        return "";
+    }
+ 
+    @Override
+    public FunList append(FunList other) {
+        return this.cdr();
+    }
+}
+ 
+public class AppendTest {
+        public static void main(String[] args) {
+            Cons test = new Cons(1, null);
+            Cons test1 = new Cons(5, null);
+            Cons test2 = new Cons(65, null);
+            Cons test3 = new Cons(0, null);
+ 
+            FunList f = test.append(test2);
+            FunList f1 = test.append(test3);
+            f = ((f.append(test3)).append(test2)).append(test1);
+            System.out.println(f.append(test3));
+            System.out.println(g.sort());
+        }
+}
+ 
+public class Main {
+ 
+    public static void main(String[] args) {
+        AppendTest.main(new String[]{});
+    }
+}
